@@ -77,7 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch(`${API_BASE}/create`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), mode: 'cors' });
+            const response = await fetch(`${API_BASE}/create`, { 
+                method: 'POST', 
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }, 
+                body: JSON.stringify(data), 
+                mode: 'cors' 
+            });
             const result = await response.json();
             if (!response.ok) throw new Error(result.detail || getTranslation('toast_create_failed'));
             
