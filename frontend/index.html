@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickShare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="container">
+            <a href="#create" class="logo" aria-label="Home">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 6.00002L16 8.50002L8.5 16L6 13.5L13.5 6.00002Z" fill="currentColor"/><path d="M17.5 4.50002C18.3284 4.50002 19 5.17159 19 6.00002C19 6.82845 18.3284 7.50002 17.5 7.50002C16.6716 7.50002 16 6.82845 16 6.00002C16 5.17159 16.6716 4.50002 17.5 4.50002Z" fill="currentColor"/><path d="M6.5 12C7.32843 12 8 12.6716 8 13.5C8 14.3284 7.32843 15 6.5 15C5.67157 15 5 14.3284 5 13.5C5 12.6716 5.67157 12 6.5 12Z" fill="currentColor"/><path d="M14 12L11.5 9.5L4 17L4.5 17.5L5 18L6.5 19.5L7 20L9 18L14 13L14 12Z" fill="currentColor"/></svg>
+                <h1>QuickShare</h1>
+            </a>
+            <div class="controls">
+                <nav class="app-nav">
+                    <a href="#create" class="nav-tab active" data-tab="create" data-i18n="createTab"></a>
+                    <a href="#view" class="nav-tab" data-tab="view" data-i18n="viewTab"></a>
+                    <a href="#about" class="nav-tab" data-tab="about" data-i18n="aboutTab"></a>
+                </nav>
+                <button id="lang-toggle" class="control-btn" aria-label="Toggle Language">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </button>
+                <button id="theme-toggle" class="control-btn" aria-label="Toggle Theme">
+                    <svg class="icon icon-light" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg class="icon icon-dark" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <svg class="icon icon-system" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="container">
+            <!-- Create Tab -->
+            <div id="create-tab" class="tab-content active">
+                <form id="create-form" class="card">
+                    <div class="form-group">
+                        <label for="content" data-i18n="createHeader"></label>
+                        <textarea id="content" name="content" rows="12" data-i18n="createPlaceholder"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expire-hours" data-i18n="expireLabel"></label>
+                            <select id="expire-hours" name="expire_hours">
+                                <option value="1" data-i18n="expire_1h"></option>
+                                <option value="6" data-i18n="expire_6h"></option>
+                                <option value="24" selected data-i18n="expire_1d"></option>
+                                <option value="72" data-i18n="expire_3d"></option>
+                                <option value="168" data-i18n="expire_7d"></option>
+                                <option value="0" data-i18n="expire_0"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="max-views" data-i18n="viewsLabel"></label>
+                            <select id="max-views" name="max_views">
+                                <option value="1" selected data-i18n="views_1"></option>
+                                <option value="3" data-i18n="views_3"></option>
+                                <option value="10" data-i18n="views_10"></option>
+                                <option value="0" data-i18n="views_0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" data-i18n="passwordLabel"></label>
+                        <input type="password" id="password" name="password" data-i18n="passwordPlaceholder">
+                    </div>
+                    <button type="submit" id="create-button" class="btn btn-primary" data-i18n="createButton"></button>
+                </form>
+                <div id="create-result" class="hidden"></div>
+            </div>
+
+            <!-- View Tab -->
+            <div id="view-tab" class="tab-content">
+                <div class="card">
+                    <div class="form-group">
+                        <label for="share-url" data-i18n="viewHeader"></label>
+                        <div class="input-group">
+                            <input type="text" id="share-url" data-i18n="viewPlaceholder">
+                            <button id="view-button" class="btn btn-primary" data-i18n="viewButton"></button>
+                        </div>
+                    </div>
+                </div>
+                <div id="view-result-container">
+                    <div id="loading-section" class="hidden card"><div class="spinner"></div><span data-i18n="loading"></span></div>
+                    <div id="password-section" class="hidden card">
+                        <h3 data-i18n="encryptedHeader"></h3>
+                        <p data-i18n="encryptedMessage"></p>
+                        <form id="password-form" class="input-group">
+                            <input type="password" id="password-input" data-i18n="passwordPlaceholder">
+                            <button id="decrypt-button" type="submit" class="btn btn-primary" data-i18n="decryptButton"></button>
+                        </form>
+                        <div id="password-error" class="alert-danger hidden"></div>
+                    </div>
+                    <div id="content-section" class="hidden card">
+                        <h3 data-i18n="contentHeader"></h3>
+                        <pre id="paste-content"></pre>
+                        <div class="actions">
+                            <button id="copy-button" class="btn btn-secondary" data-i18n="copyContentButton"></button>
+                            <button id="new-button" class="btn btn-primary" data-i18n="newShareButton"></button>
+                        </div>
+                    </div>
+                    <div id="error-section" class="hidden card alert-danger">
+                        <h3 id="error-message-text"></h3>
+                        <button id="home-button" class="btn btn-secondary" data-i18n="homeButton"></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div id="about-tab" class="tab-content">
+                <div class="card">
+                    <h2 data-i18n="aboutHeader"></h2>
+                    <p data-i18n="aboutP1"></p>
+                    <h3>Core Features</h3>
+                    <ul>
+                        <li><span class="icon">🔐</span> <span data-i18n="feature1"></span></li>
+                        <li><span class="icon">🔥</span> <span data-i18n="feature2"></span></li>
+                        <li><span class="icon">💨</span> <span data-i18n="feature3"></span></li>
+                        <li><span class="icon">💻</span> <span data-i18n="feature4"></span></li>
+                    </ul>
+                    <h3 data-i18n="techStack"></h3>
+                    <p data-i18n="techStackContent"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <p>&copy; 2025 QuickShare. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="toast-notification" class="toast"></div>
+
+    <script src="script.js" type="module"></script>
+</body>
+</html>

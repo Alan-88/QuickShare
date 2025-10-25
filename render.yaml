@@ -1,0 +1,51 @@
+# render.yaml
+# This file configures the deployment of the QuickShare application on Render.
+
+databases:
+  # A PostgreSQL database for storing the shared pastes.
+  # The 'free' plan is sufficient for this project.
+  - name: quickshare-db
+    databaseName: quickshare_db
+    user: quickshare_user
+    plan: free
+
+services:
+  # The backend service (FastAPI)
+  - type: web
+    name: quickshare-backend
+    # runtime: python # Render detects this automatically
+    plan: free
+    # The working directory for the backend
+    cwd: ./backend
+    # Command to install dependencies
+    buildCommand: "pip install -r requirements.txt"
+    # Command to start the FastAPI server
+    # Render provides the $PORT environment variable.
+    # --host 0.0.0.0 makes it accessible from outside the container.
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      # Set the Python version to match the local environment
+      - key: PYTHON_VERSION
+        value: 3.11
+      # The DATABASE_URL is automatically provided by the database service defined above.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quickshare-db
+          property: connectionString
+
+  # The frontend service (Static Site)
+  - type: static
+    name: quickshare-frontend
+    plan: free
+    # The working directory for the frontend
+    cwd: ./frontend
+    # Command to install dependencies and build the static assets
+    buildCommand: "npm install && npm run build"
+    # The directory where the built static files are located
+    staticPublishPath: dist
+    routes:
+      # Rewrite rule to proxy API requests to the backend service.
+      # This makes the frontend's relative API calls (e.g., /api/create) work.
+      - type: rewrite
+        source: /api/*
+        destination: https://quickshare-backend.onrender.com/*
