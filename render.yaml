@@ -2,7 +2,7 @@
 version: "1"
 services:
 - type: web
-  name: QuickShare
+  name: QuickShare-007
   runtime: python
   repo: https://github.com/Alan-88/QuickShare
   plan: free
