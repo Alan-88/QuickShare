@@ -1,8 +1,12 @@
 # QuickShare
 
-A secure, privacy-focused, self-destructing text sharing web application with multi-language and theme support. Similar to a private Pastebin.
+This project is a full-stack web application for securely sharing snippets of text or code, similar to a private Pastebin but with a modern feature set.
 
-![QuickShare Demo](https://i.imgur.com/your-demo-image.gif) <!-- Placeholder: Replace with a GIF of the new UI -->
+- **Backend**: A FastAPI-based API receives text from the user, encrypts it using a secret key, and stores it in a database (PostgreSQL for production, SQLite for development). It generates a unique, unguessable URL for each snippet and enforces self-destruction based on user-defined expiration (time-based or view-based) and optional password protection.
+
+- **Frontend**: A responsive, vanilla JavaScript Single-Page Application (SPA) provides a clean, modern user interface. Key frontend features include a simple editor for submitting text and configuring expiration options, internationalization (i18n) support for English and Chinese, and a theme switcher with Light, Dark, and System-preference modes.
+
+- **Deployment**: The project is ready for seamless deployment on platforms like Render, configured via a `render.yaml` file that defines the database, backend service, and static frontend site.
 
 ## Features
 
