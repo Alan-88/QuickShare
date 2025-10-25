@@ -156,6 +156,30 @@ async def options_create():
     """处理OPTIONS预检请求"""
     return {"status": "ok"}
 
+@app.options("/api/{path:path}")
+async def options_catch_all(path: str):
+    """处理所有OPTIONS预检请求"""
+    return {"status": "ok"}
+
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    """添加安全头部和CORS处理"""
+    response = await call_next(request)
+    
+    # 添加CORS头部
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, Accept"
+    
+    # 添加安全头部
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    
+    return response
+
+app.add_middleware(add_security_headers)
+
 @app.get("/health")
 async def health_check():
     """健康检查接口"""
