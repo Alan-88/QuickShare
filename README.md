@@ -1,154 +1,187 @@
-# QuickShare - 阅后即焚文本分享
+# QuickShare
 
-这是一个使用 FastAPI (后端) 和原生 JavaScript (前端) 构建的全栈 Web 应用。
+[中文文档 (README-zh.md)](README-zh.md)
 
-它被设计为**单个统一的服务**：FastAPI 后端不仅提供 `/api` 接口，还负责托管前端 SPA 静态文件。
+This project is a full-stack web application for securely sharing snippets of text or code, similar to a private Pastebin but with a modern feature set.
 
-## 技术栈
+- **Backend**: A FastAPI-based API serves both the REST API endpoints and the static frontend application. It receives text, encrypts it using a secret key, and stores it in a database (PostgreSQL for production, SQLite for development). It generates a unique, unguessable URL for each snippet and enforces self-destruction based on user-defined expiration (time-based or view-based) and optional password protection.
 
-- **后端**: Python 3.11, FastAPI, SQLAlchemy
-- **数据库**: PostgreSQL (生产环境, via Neon) / SQLite (本地开发)
-- **前端**: 原生 JavaScript (ESM), HTML5, CSS3
+- **Frontend**: A responsive, vanilla JavaScript Single-Page Application (SPA) provides a clean, modern user interface. Key frontend features include a simple editor for submitting text and configuring expiration options, internationalization (i18n) support for English and Chinese, and a theme switcher with Light, Dark, and System-preference modes.
 
-## 项目结构
+## Features
+
+- 🔐 **Secure Storage**: All content is encrypted at rest using Fernet (AES-128-CBC).
+- 🔥 **Configurable Self-Destruction**: Set pastes to expire after a certain time or a specific number of views.
+- 🔑 **Password Protection**: Add an optional password for an extra layer of security.
+- 🌐 **Multi-Language**: Switch between English and Chinese interfaces.
+- 🎨 **Theme Support**: Choose between Light, Dark, or sync with your System theme.
+- 🚀 **Modern SPA**: Built as a fast and responsive Single-Page Application.
+- 💨 **Lightweight**: No unnecessary trackers, ads, or external libraries on the frontend.
+- ☁️ **Deployment Ready**: Configured for simple deployment on Render as a single service.
+
+## Tech Stack
+
+- **Backend**: Python 3.11, FastAPI, SQLAlchemy, Uvicorn
+- **Database**: PostgreSQL (for production, e.g., via Neon), SQLite (for local development)
+- **Frontend**: Vanilla JavaScript (ESM), HTML5, CSS3
+- **Dependencies**: `psycopg2-binary`, `python-dotenv`, `cryptography`
+
+## Project Structure
 
 ```
 
 QuickShare/
 
-├── backend/
+├── backend/ # Backend source code
 
-│ ├── .env.example # (本地开发环境变量示例)
+│ ├── database.py # (Database config, supports Neon/SQLite)
 
-│ ├── main.py # (FastAPI 应用, API 路由 + 静态文件服务)
+│ ├── main.py # (FastAPI app: API + SPA serving)
 
-│ ├── database.py # (数据库配置, 支持本地和 Neon)
+│ ├── models.py # (SQLAlchemy models)
 
-│ ├── models.py # (SQLAlchemy 模型)
+│ ├── schemas.py # (Pydantic models)
 
-│ ├── schemas.py # (Pydantic 模型)
+│ ├── utils.py # (Encryption logic)
 
-│ ├── utils.py # (加密工具)
+│ ├── requirements.txt # (Python dependencies)
 
-│ └── requirements.txt
+│ └── .env.example # (Environment variable template)
 
-└── frontend/
+├── frontend/ # Frontend source code
 
-├── index.html # (SPA 入口)
+│ ├── index.html # (The single HTML page)
 
-├── style.css # (样式)
+│ ├── script.js # (Main application logic)
 
-├── script.js # (主逻辑)
+│ ├── style.css # (Stylesheet with theme support)
 
-└── ...
+│ ├── i18n.js # (Internationalization module)
+
+│ └── theme.js # (Theme switching module)
+
+├── .gitignore # Git ignore file
+
+└── README.md # This file
 
 ```
 
-## 1. 本地开发运行
+## Getting Started
 
-**1. 设置后端:**
+### Prerequisites
+
+- Python 3.11+
+- A Git client
+- (Optional) An account with a cloud PostgreSQL provider like [Neon](https://neon.tech/) for deployment.
+
+### 1. Local Development
+
+**1. Clone the repository:**
 ```bash
-# 进入后端目录
-cd backend
-
-# (推荐) 创建并激活虚拟环境
-python -m venv .venv
-source .venv/bin/activate  # macOS/Linux
-# .venv\Scripts\activate   # Windows
-
-# 安装依赖
-pip install -r requirements.txt
+git clone <your-repo-url>
+cd QuickShare
 ```
 
-2. 设置环境变量:
-
-在 backend/ 目录下创建一个 .env 文件。
-
-- 选项A (推荐, 使用本地 SQLite):
-    
-    你只需要设置 SECRET_KEY。database.py 会自动回退到本地 quickshare.db 文件。
-    
-    代码段
-    
-    ```
-    SECRET_KEY="a-very-secret-key-for-local-dev"
-    ```
-    
-- 选项B (连接 Neon 进行本地测试):
-    
-    从你的 Neon 项目获取连接字符串。
-    
-    代码段
-    
-    ```
-    # 替换为你的 Neon 数据库连接 URL
-    DATABASE_URL="postgresql://user:password@host.neon.tech/dbname?sslmode=require"
-    SECRET_KEY="a-very-secret-key-for-local-dev"
-    ```
-    
-
-**3. 运行项目:**
+**2. Set up the Backend:**
 
 Bash
 
 ```
-# 在 backend/ 目录下运行
-uvicorn main:app --reload --port 8000
+# Navigate to the backend directory
+cd backend
+
+# Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-应用现在运行在 `http://127.0.0.1:8000`。
+3. Configure Environment:
 
-## 2. 在 Render 上部署 (统一服务 + Neon 数据库)
+Create a file named .env inside the backend directory.
 
-**目标：** 部署为 _1个_ Web 服务 (用于 FastAPI)。数据库由 Neon **外部**提供。
-
-**1. 准备工作：**
-
-- **GitHub:** 确保你所有的代码（`backend/` 和 `frontend/` 目录）都在一个 GitHub 仓库中。
+- Option A (Recommended - Use SQLite):
     
-- **Neon:** 注册 Neon，创建一个新项目，获取数据库连接 URL (PostgreSQL URL)。
+    You only need to provide a SECRET_KEY. The app will automatically fall back to a local quickshare.db file.
     
-
-**2. 在 Render 创建新服务:**
-
-- 在 Render 仪表板, 点击 **New > Web Service**。
+    代码段
     
-- 连接你的 GitHub 仓库。
+    ```
+    SECRET_KEY=your-strong-generated-secret-key-here
+    ```
     
-
-**3. 配置 Web Service:**
-
-- **Name:** `quickshare` (或你喜欢的)
+- Option B (Use Neon for local testing):
     
-- **Root Directory:** `backend` (重要！因为 `main.py` 和 `requirements.txt` 在这里)
+    Copy your database connection string from Neon.
     
-- **Environment:** `Python 3`
+    代码段
     
-- **Build Command:** `pip install -r requirements.txt`
-    
-- **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+    ```
+    SECRET_KEY=your-strong-generated-secret-key-here
+    DATABASE_URL=postgresql://user:password@host.neon.tech/dbname?sslmode=require
+    ```
     
 
-**4. 添加环境变量 (最关键的一步):**
+4. Run the application:
 
-- 在 "Environment" 标签页，添加 **Secret Variables**：
-    
-- Key 1: DATABASE_URL
-    
-    Value 1: (粘贴你从 Neon 获取的完整数据库连接 URL)
-    
-- Key 2: SECRET_KEY
-    
-    Value 2: (粘贴一个新生成的、强壮的 Fernet 密钥)
-    
+Start the backend server from the backend directory:
 
-**5. 创建服务:**
+Bash
 
-- 点击 "Create Web Service"。
+```
+uvicorn main:app --reload
+```
+
+The application (both frontend and backend) is now available at `http://127.0.0.1:8000`.
+
+### 2. Deployment on Render (with Neon DB)
+
+This project is configured for a simple, unified deployment on Render.
+
+1. Push to a Git Repository:
+
+Commit all files (backend/, frontend/, etc.) and push them to a new repository on GitHub or GitLab.
+
+2. Get Database URL:
+
+Go to your Neon project and copy the PostgreSQL connection URL.
+
+**3. Create a Web Service on Render:**
+
+- In your Render dashboard, click **New > Web Service**.
     
-- Render 将会构建并启动你的 FastAPI 服务。`database.py` 中的逻辑会读取 `DATABASE_URL` 环境变量并连接到你的 Neon 数据库。
+- Select your repository.
     
+- Configure the service settings:
+    
+    - **Name:** `quickshare` (or as you like)
+        
+    - **Root Directory:** `backend` (This is crucial)
+        
+    - **Environment:** `Python 3`
+        
+    - **Build Command:** `pip install -r requirements.txt`
+        
+    - **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+        
 
-**6. 访问：**
+**4. Set Environment Variables:**
 
-- 使用 Render 提供的 `...onrender.com` URL 访问你的应用。
+- Go to the **Environment** tab for your new service.
+    
+- Add two **Secret Variables**:
+    
+    1. Key: DATABASE_URL
+        
+        Value: (Paste your full Neon database connection URL)
+        
+    2. Key: SECRET_KEY
+        
+        Value: (Paste a new, securely generated Fernet key)
+        
+
+5. Deploy:
+
+Click Create Web Service. Render will build and launch your application. The public URL will serve your frontend SPA, which will correctly call the API on the same domain.
