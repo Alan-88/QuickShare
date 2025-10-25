@@ -29,3 +29,6 @@ yarn-error.log*
 
 # macOS
 .DS_Store
+
+# Ignored development scripts
+backend/init_db.py
