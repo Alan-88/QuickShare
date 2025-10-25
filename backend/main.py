@@ -23,9 +23,9 @@ app = FastAPI(
 # 配置CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:8000"],  # Vite开发服务器和生产环境
+    allow_origins=["*"],  # 允许所有源，便于调试
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # 明确指定允许的方法
     allow_headers=["*"],
 )
 
@@ -150,6 +150,11 @@ async def get_paste(unique_id: str, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"获取内容失败: {str(e)}")
+
+@app.options("/api/create")
+async def options_create():
+    """处理OPTIONS预检请求"""
+    return {"status": "ok"}
 
 @app.get("/health")
 async def health_check():
