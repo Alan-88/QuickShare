@@ -7,7 +7,7 @@
 ## 技术栈
 
 - **后端**: Python 3.11, FastAPI, SQLAlchemy
-- **数据库**: SQLite
+- **数据库**: PostgreSQL (生产环境, via Neon) / SQLite (本地开发)
 - **前端**: 原生 JavaScript (ESM), HTML5, CSS3
 
 ## 项目结构
@@ -18,9 +18,11 @@ QuickShare/
 
 ├── backend/
 
+│ ├── .env.example # (本地开发环境变量示例)
+
 │ ├── main.py # (FastAPI 应用, API 路由 + 静态文件服务)
 
-│ ├── database.py # (数据库配置, 支持本地和 Render 持久化磁盘)
+│ ├── database.py # (数据库配置, 支持本地和 Neon)
 
 │ ├── models.py # (SQLAlchemy 模型)
 
@@ -38,9 +40,7 @@ QuickShare/
 
 ├── script.js # (主逻辑)
 
-├── i18n.js # (国际化)
-
-└── theme.js # (主题)
+└── ...
 
 ```
 
@@ -60,17 +60,32 @@ source .venv/bin/activate  # macOS/Linux
 pip install -r requirements.txt
 ```
 
-**2. 设置环境变量:**
+2. 设置环境变量:
 
-Bash
+在 backend/ 目录下创建一个 .env 文件。
 
-```
-# (macOS/Linux)
-export SECRET_KEY="a-very-secret-key-for-local-dev"
-
-# (Windows)
-set SECRET_KEY="a-very-secret-key-for-local-dev"
-```
+- 选项A (推荐, 使用本地 SQLite):
+    
+    你只需要设置 SECRET_KEY。database.py 会自动回退到本地 quickshare.db 文件。
+    
+    代码段
+    
+    ```
+    SECRET_KEY="a-very-secret-key-for-local-dev"
+    ```
+    
+- 选项B (连接 Neon 进行本地测试):
+    
+    从你的 Neon 项目获取连接字符串。
+    
+    代码段
+    
+    ```
+    # 替换为你的 Neon 数据库连接 URL
+    DATABASE_URL="postgresql://user:password@host.neon.tech/dbname?sslmode=require"
+    SECRET_KEY="a-very-secret-key-for-local-dev"
+    ```
+    
 
 **3. 运行项目:**
 
@@ -81,15 +96,18 @@ Bash
 uvicorn main:app --reload --port 8000
 ```
 
-应用现在运行在 `http://127.0.0.1:8000`。FastAPI 会自动服务 `index.html`。
+应用现在运行在 `http://127.0.0.1:8000`。
 
-## 2. 在 Render 上部署 (统一服务 + 持久化磁盘)
+## 2. 在 Render 上部署 (统一服务 + Neon 数据库)
 
-**目标：** 部署为 _1个_ Web 服务 (用于 FastAPI) 和 _1个_ 持久化磁盘 (用于 SQLite)。
+**目标：** 部署为 _1个_ Web 服务 (用于 FastAPI)。数据库由 Neon **外部**提供。
 
-1. 推送代码到 GitHub:
+**1. 准备工作：**
 
-确保你所有的代码（backend/ 和 frontend/ 目录）都在一个 GitHub 仓库中。
+- **GitHub:** 确保你所有的代码（`backend/` 和 `frontend/` 目录）都在一个 GitHub 仓库中。
+    
+- **Neon:** 注册 Neon，创建一个新项目，获取数据库连接 URL (PostgreSQL URL)。
+    
 
 **2. 在 Render 创建新服务:**
 
@@ -111,33 +129,26 @@ uvicorn main:app --reload --port 8000
 - **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
     
 
-**4. 添加持久化磁盘 (最关键的一步):**
+**4. 添加环境变量 (最关键的一步):**
 
-- 在创建服务的页面**下方** (或在服务的 "Disks" 标签页)，点击 **Add Disk**。
+- 在 "Environment" 标签页，添加 **Secret Variables**：
     
-- **Name:** `data-storage`
+- Key 1: DATABASE_URL
     
-- **Mount Path:** `/var/data` (必须与 `database.py` 中的路径完全一致)
+    Value 1: (粘贴你从 Neon 获取的完整数据库连接 URL)
     
-- **Size:** `1 GB` (免费)
+- Key 2: SECRET_KEY
     
-
-**5. 添加环境变量:**
-
-- 在 "Environment" 标签页，添加一个 **Secret Variable**：
-    
-- **Key:** `SECRET_KEY`
-    
-- **Value:** (在此处粘贴一个新生成的、强壮的 Fernet 密钥)
+    Value 2: (粘贴一个新生成的、强壮的 Fernet 密钥)
     
 
-**6. 创建服务:**
+**5. 创建服务:**
 
 - 点击 "Create Web Service"。
     
-- Render 将会构建并启动你的 FastAPI 服务。`database.py` 中的逻辑会自动检测到 `/var/data` 目录，并在你的持久化磁盘上创建和使用 `quickshare.db` 文件。
+- Render 将会构建并启动你的 FastAPI 服务。`database.py` 中的逻辑会读取 `DATABASE_URL` 环境变量并连接到你的 Neon 数据库。
     
 
-**7. 访问：**
+**6. 访问：**
 
 - 使用 Render 提供的 `...onrender.com` URL 访问你的应用。
