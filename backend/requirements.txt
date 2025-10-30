@@ -6,3 +6,5 @@ python-multipart==0.0.6
 pydantic==1.10.13
 python-dotenv==1.0.1
 psycopg2-binary
+passlib==1.7.4
+bcrypt==4.1.3

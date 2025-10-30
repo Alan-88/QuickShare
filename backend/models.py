@@ -12,3 +12,4 @@ class Paste(Base):
     expire_hours = Column(Integer, default=0)  # 0 = 永不过期
     max_views = Column(Integer, default=0)    # 0 = 不限次数
     current_views = Column(Integer, default=0)
+    password_hash = Column(String(255), nullable=True, default=None)
