@@ -5,6 +5,10 @@ const translations = {
         viewTab: 'View',
         aboutTab: 'About',
 
+        // Home Tab (更改)
+        homeHeader: 'Securely share text and code snippets. Your content is encrypted and self-destructs.',
+        homeButton: 'Create a Link',
+
         // Create Tab
         createHeader: 'Share Content',
         createPlaceholder: 'Paste any text or code here...',
@@ -43,7 +47,7 @@ const translations = {
         copyContentButton: 'Copy Content',
         newShareButton: 'Create New Share',
         errorHeader: 'Unable to Access Content',
-        homeButton: 'Back to Home',
+        homeButton: 'Share a Text',
 
         // About Tab
         aboutHeader: 'About QuickShare',
@@ -51,9 +55,14 @@ const translations = {
         feature1: 'Stored encrypted to protect privacy',
         feature2: 'Burn-after-read by views or time',
         feature3: 'Lightweight and fast, no unnecessary tracking or ads',
-        feature4: 'Simple interface, focused on the core sharing experience',
+        feature4: 'Simple interface, focused on core sharing experience',
         techStack: 'Tech Stack',
         techStackContent: 'Backend: Python (FastAPI) | Frontend: Vanilla JavaScript | Database: PostgreSQL / SQLite',
+
+        // 新增
+        aboutAuthorHeader: 'About Author',
+        aboutAuthorP1: 'Hello, I\'m Alan.',
+        aboutAuthorP2: 'A developer passionate about building simple, practical tools. Feel free to connect with me.',
 
         // Toasts
         toast_copied: 'Copied to clipboard',
@@ -69,6 +78,10 @@ const translations = {
         createTab: '创建',
         viewTab: '查看',
         aboutTab: '关于',
+
+        // Home Tab (更改)
+        homeHeader: '安全地分享文本和代码片段。您的内容将被加密并自动销毁。',
+        homeButton: '创建分享',
 
         // Create Tab
         createHeader: '分享内容',
@@ -108,7 +121,7 @@ const translations = {
         copyContentButton: '复制内容',
         newShareButton: '创建新分享',
         errorHeader: '无法访问内容',
-        homeButton: '返回首页',
+        homeButton: '分享文本',
 
         // About Tab
         aboutHeader: '关于 QuickShare',
@@ -119,6 +132,11 @@ const translations = {
         feature4: '界面简洁，专注于核心分享体验',
         techStack: '技术栈',
         techStackContent: '后端: Python (FastAPI) | 前端: Vanilla JavaScript | 数据库: PostgreSQL / SQLite',
+
+        // 新增 (使用你提供的文本)
+        aboutAuthorHeader: '关于作者',
+        aboutAuthorP1: '你好，我是 Alan.',
+        aboutAuthorP2: '一个热衷于构建简洁、实用工具的开发者，欢迎通过以下方式与我联系。',
 
         // Toasts
         toast_copied: '已复制到剪贴板',

@@ -67,6 +67,7 @@ body {
 .logo h1 { font-size: 1.5rem; font-weight: 600; color: var(--c-text); }
 .controls { display: flex; align-items: center; gap: 0.5rem; }
 .app-nav { display: flex; background-color: var(--c-bg); padding: 0.25rem; border-radius: 8px; border: 1px solid var(--c-border); }
+
 .nav-tab { color: var(--c-text-muted); text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; transition: background-color var(--transition-speed), color var(--transition-speed); }
 .nav-tab:hover { color: var(--c-text); }
 .nav-tab.active { color: var(--c-primary); background-color: var(--c-bg-card); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -86,6 +87,23 @@ body {
 
 .card { background-color: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: var(--card-radius); box-shadow: var(--c-shadow); padding: 2rem; }
 .card + .card { margin-top: 1.5rem; }
+
+/* 统一卡片内部的链接样式 */
+.card a {
+    /* 亮色主题下使用 --c-primary */
+    color: var(--c-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-speed);
+}
+.card a:hover {
+    text-decoration: underline;
+}
+
+/* 暗色主题下使用 --c-accent */
+[data-theme='dark'] .card a {
+    color: var(--c-accent);
+}
 
 .tab-content { display: none; }
 .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
