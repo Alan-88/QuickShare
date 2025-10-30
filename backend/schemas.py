@@ -16,6 +16,10 @@ class PasteCreateResponse(BaseModel):
     max_views: int
     has_password: bool
 
+# 用于验证密码的请求模型
+class PasteVerifyRequest(BaseModel):
+    password: str
+
 # 用于查看粘贴的响应模型
 class PasteViewResponse(BaseModel):
     content: str
