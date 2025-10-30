@@ -14,13 +14,13 @@
 
     <header class="app-header">
         <div class="container">
-            <a href="#create" class="logo" aria-label="Home">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 6.00002L16 8.50002L8.5 16L6 13.5L13.5 6.00002Z" fill="currentColor"/><path d="M17.5 4.50002C18.3284 4.50002 19 5.17159 19 6.00002C19 6.82845 18.3284 7.50002 17.5 7.50002C16.6716 7.50002 16 6.82845 16 6.00002C16 5.17159 16.6716 4.50002 17.5 4.50002Z" fill="currentColor"/><path d="M6.5 12C7.32843 12 8 12.6716 8 13.5C8 14.3284 7.32843 15 6.5 15C5.67157 15 5 14.3284 5 13.5C5 12.6716 5.67157 12 6.5 12Z" fill="currentColor"/><path d="M14 12L11.5 9.5L4 17L4.5 17.5L5 18L6.5 19.5L7 20L9 18L14 13L14 12Z" fill="currentColor"/></svg>
+            <a href="#home" class="logo" aria-label="Home">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 6.00002L16 8.50002L8.5 16L6 13.5L13.5 6.00002Z" fill="currentColor"/><path d="M17.5 4.50002C18.3284 4.50002 19 5.17159 19 6.00002C19 6.82845 18.3284 7.50002 17.5 7.50002C16.6716 7.50002 16 6.82845 16 6.00002C16 5.17159 16.6716 4.50002 17.5 4.50002Z" fill="currentColor"/><path d="M6.5 12C7.32843 12 8 12.6716 8 13.5C8 14.3284 7.32843 15 6.5 15C5.67157 15 5 14.3284 5 13.5C5 12.6716 5.67157 12 6.5 12Z" fill="currentColor"/><path d="M14 12L11.5 9.5L4 17L4.5 17.5L5 18L6.5 19.5L7 20L9 18L14 13L14 12Z" fill="currentColor"/></svg>
                 <h1>QuickShare</h1>
             </a>
             <div class="controls">
                 <nav class="app-nav">
-                    <a href="#create" class="nav-tab active" data-tab="create" data-i18n="createTab"></a>
+                    <a href="#create" class="nav-tab" data-tab="create" data-i18n="createTab"></a>
                     <a href="#view" class="nav-tab" data-tab="view" data-i18n="viewTab"></a>
                     <a href="#about" class="nav-tab" data-tab="about" data-i18n="aboutTab"></a>
                 </nav>
@@ -38,8 +38,15 @@
 
     <main class="app-main">
         <div class="container">
+            <div id="home-tab" class="tab-content active">
+                <div class="card" style="text-align: center;">
+                    <h2 data-i18n="homeHeader" style="font-size: 1.75rem; margin-bottom: 2rem; line-height: 1.5; color: var(--c-text);"></h2>
+                    <button id="home-start-button" class="btn btn-primary" data-i18n="homeButton" style="width: auto; padding: 0.75rem 2rem;"></button>
+                </div>
+            </div>
+
             <!-- Create Tab -->
-            <div id="create-tab" class="tab-content active">
+            <div id="create-tab" class="tab-content">
                 <form id="create-form" class="card">
                     <div class="form-group">
                         <label for="content" data-i18n="createHeader"></label>
@@ -127,6 +134,15 @@
                     </ul>
                     <h3 data-i18n="techStack"></h3>
                     <p data-i18n="techStackContent"></p>
+
+                    <h3 data-i18n="aboutAuthorHeader" style="margin-top: 2rem;"></h3>
+                    <p data-i18n="aboutAuthorP1"></p>
+                    <p data-i18n="aboutAuthorP2"></p>
+                    <ul style="list-style-type: none; padding-left: 0; margin-top: 1rem;">
+                        <li style="margin-bottom: 0.5rem;"><strong>GitHub:</strong> <a href="https://github.com/Alan-88" target="_blank" rel="noopener noreferrer">https://github.com/Alan-88</a></li>
+                        <li style="margin-bottom: 0.5rem;"><strong>CSDN:</strong> <a href="https://blog.csdn.net/weixin_39874463?type=blog" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/weixin_39874463</a></li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Email:</strong> alanwzs.lwang@gmail.com</li>
+                    </ul>
                 </div>
             </div>
         </div>

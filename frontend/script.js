@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         errorSection: document.getElementById('error-section'),
         errorMessageText: document.getElementById('error-message-text'),
         homeButton: document.getElementById('home-button'),
+        homeStartButton: document.getElementById('home-start-button'), // 新增
         toast: document.getElementById('toast-notification'),
     };
 
@@ -45,7 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function switchTab(targetId) {
         elements.tabContents.forEach(content => content.classList.toggle('active', content.id === targetId));
         elements.navTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === targetId.replace('-tab', '')));
-        window.location.hash = targetId.replace('-tab', '');
+        
+        // 保留: 这个逻辑依然有用
+        if (targetId === 'home-tab') {
+            window.location.hash = '';
+        } else {
+            window.location.hash = targetId.replace('-tab', '');
+        }
     }
 
     function displayViewResult(sectionToShow) {
@@ -165,7 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function bindEvents() {
-        elements.navTabs.forEach(tab => tab.addEventListener('click', e => { e.preventDefault(); switchTab(tab.getAttribute('href').substring(1) + '-tab'); }));
+        elements.navTabs.forEach(tab => tab.addEventListener('click', e => { 
+            e.preventDefault(); 
+            const targetTab = tab.getAttribute('href').substring(1);
+            switchTab(targetTab + '-tab'); 
+        }));
         elements.langToggle.addEventListener('click', () => setLanguage(document.documentElement.lang === 'zh' ? 'en' : 'zh'));
         elements.themeToggle.addEventListener('click', cycleTheme);
         elements.createForm.addEventListener('submit', e => { e.preventDefault(); createPaste(); });
@@ -178,6 +189,11 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.copyButton.addEventListener('click', () => { navigator.clipboard.writeText(elements.pasteContent.textContent); showToast('toast_copied'); });
         elements.newButton.addEventListener('click', () => switchTab('create-tab'));
         elements.homeButton.addEventListener('click', () => switchTab('create-tab'));
+        
+        // 新增: "Home" 按钮的事件
+        if (elements.homeStartButton) {
+            elements.homeStartButton.addEventListener('click', () => switchTab('create-tab'));
+        }
     }
 
     function init() {
@@ -192,13 +208,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 viewPaste(shareId);
             } else if (hash) {
                 const tabId = hash.substring(1) + '-tab';
-                if (document.getElementById(tabId)) switchTab(tabId);
+                if (document.getElementById(tabId) && tabId !== 'home-tab') { // 确保 hash 不是 #home
+                    switchTab(tabId);
+                } else {
+                    switchTab('home-tab'); 
+                }
             } else {
-                switchTab('create-tab');
+                switchTab('home-tab'); 
             }
         };
         window.addEventListener('hashchange', handleUrl);
         handleUrl();
+
+        // 确保 Logo 的点击事件能被正确处理
+        // (因为 Logo 不是 .nav-tab, 我们需要单独绑定)
+        const logo = document.querySelector('.logo');
+        if (logo) {
+            logo.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab('home-tab');
+            });
+        }
     }
 
     init();
