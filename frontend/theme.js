@@ -2,20 +2,25 @@ const themes = ['light', 'dark', 'system'];
 let currentThemeIndex = 0; // 0: light, 1: dark, 2: system
 
 function applyTheme(theme) {
-    // Determine the actual theme to apply (light or dark)
+    // 确定要应用的实际主题（light或dark）
     const effectiveTheme = theme === 'system'
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         : theme;
     
     document.body.dataset.theme = effectiveTheme;
 
-    // Update the icon visibility to reflect the selected mode (light, dark, or system)
+    // 2. 更改主题按钮图标
     document.querySelectorAll('#theme-toggle .icon').forEach(icon => {
         icon.style.display = 'none';
     });
     const iconToShow = document.querySelector(`#theme-toggle .icon-${theme}`);
     if (iconToShow) {
         iconToShow.style.display = 'block';
+    }
+
+    const favicon = document.getElementById('favicon');
+    if (favicon) {
+        favicon.href = `/static/favicon-${effectiveTheme}.svg`;
     }
 }
 
