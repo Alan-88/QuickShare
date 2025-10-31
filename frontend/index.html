@@ -2,7 +2,36 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            // -----------------------------------------------------------------
+            // 核心逻辑：
+            // 我们使用 600px 作为 "移动端" 的分界点，
+            // 这与你的 style.css 媒体查询 (@media (max-width: 600px)) 保持一致。
+            // -----------------------------------------------------------------
+            var mobileBreakpoint = 600; 
+            var viewportContent;
+
+            if (screen.width <= mobileBreakpoint) {
+                // 1. 这是移动端：
+                // 使用你发现的 "width=400" 来强制页面缩小，防止溢出。
+                viewportContent = "width=400";
+            } else {
+                // 2. 这是 PC 端：
+                // 使用标准的 viewport 设置。
+                viewportContent = "width=device-width, initial-scale=1.0";
+            }
+
+            // 动态创建或更新 viewport meta 标签
+            var metaTag = document.querySelector('meta[name="viewport"]');
+            if (!metaTag) {
+                metaTag = document.createElement('meta');
+                metaTag.setAttribute('name', 'viewport');
+                document.head.appendChild(metaTag);
+            }
+            metaTag.setAttribute('content', viewportContent);
+        })();
+    </script>
     <title>QuickShare</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
